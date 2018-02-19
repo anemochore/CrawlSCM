@@ -9,8 +9,8 @@ driver.set_window_size(800,600) ## 크롬 창을 작게 띄웁니다.
 driver.implicitly_wait(5) ## 컴이 후지니까 5초 기다립니다.
 
 driver.get('https://scm.yes24.com/Login/LogOn')
-##driver.find_element_by_name('UserName').send_keys('jthhke') 아이디와 로그인이 크롬에 남아 있으므로 생략
-##driver.find_element_by_name('Password').send_keys('hanbit0319319!!') 이하 동문
+##driver.find_element_by_name('UserName').send_keys('') 아이디와 로그인이 크롬에 남아 있으므로 생략
+##driver.find_element_by_name('Password').send_keys('') 이하 동문
 driver.find_element_by_xpath('//div[@class="loginBtn"]').click() ## 로그인 버튼 클릭
 
 now = datetime.datetime.now() - datetime.timedelta(days=1) ## 타임스탬프 사용
