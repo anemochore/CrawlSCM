@@ -1,0 +1,53 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import datetime
+
+options = webdriver.ChromeOptions()
+options.add_argument("user-data-dir=C:/Users/parkjisu/AppData/Local/Google/Chrome/User Data")  #크롬 기본 프로필을 불러옵니다. (쿠키와 아이디가 저장되어 있음)
+driver = webdriver.Chrome(executable_path="C:\py\chromedriver.exe", chrome_options=options)
+driver.set_window_size(1024,768) ## 크롬 창을 작게 띄웁니다.
+driver.implicitly_wait(3) ## 컴이 후져도 3초 기다립니다.
+driver.get('https://scm.kyobobook.co.kr/scm/login.action')
+##driver.find_element_by_id('ipt_userId').send_keys('2208105665')
+##driver.find_element_by_id('ipt_password').send_keys('hanbit0319319!')
+driver.find_element_by_xpath('//*[@id="btn_login"]').click() ## 로그인 버튼 클릭
+driver.implicitly_wait(3) ## 컴이 후져도 또한 10초 기다립니다.
+
+driver.get('https://scm.kyobobook.co.kr/scm/page.action?pageID=main')
+driver.implicitly_wait(5) ## 컴이 후져도 또한 10초 기다립니다.
+driver.find_element_by_class_name('w2selectbox_table_main').click() ## 드롭다운 폼
+driver.implicitly_wait(3) ## 컴이 후져도 또한 3초 기다립니다.
+driver.find_element_by_id('s_vndrList_itemTable_1"]').click() ## 2번째 사용자 계정 접속
+driver.implicitly_wait(3) ## 컴이 후져도 그나마 3초 기다립니다.
+driver.get('https://scm.kyobobook.co.kr/scm/page.action?pageID=saleStockInfo') ## 판매조회 페이지로 이동
+
+now = datetime.datetime.now() - datetime.timedelta(days=1) ## 타임스탬프 사용
+yesterDay = now.strftime('%Y%m%d') ## 전일 기록을 가져오기 위해 '어제'날짜를 로드
+
+startDate = yesterDay ##Url에 검색 시작일을 '어제' 날짜로 날짜 양식은 yyyymmdd
+endDate = yesterDay ##Url에 검색 종료일을 '어제' 날짜로
+
+# 상품번호와 전일 날짜를 각각의 폼에 전송하고 조회 (터미널에 숫자가 뜨면 성공)
+goodsNo = "9788968484636" ##상품번호
+driver.find_element_by_name('sel_strDateFrom_input').send_keys(startDate)
+driver.find_element_by_name('sel_strDateTo_input').send_keys(endDate) ## 조회기간 폼에 입력
+driver.find_element_by_name('sel_cmdtCode').send_keys(goodsNo) ## 상품명에 ISBN 입력
+driver.find_element_by_xpath('btn_search').click() ## [조회]버튼 클릭
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
+notices = soup.select('#grd_saleStockInfo_cell_0_6 > nobr') ## 판매(영업점) 기록 파싱
+
+for n in notices:
+    print(n.text.strip())
+
+goodsNo = "9791162240137" ##상품번호
+driver.find_element_by_name('sel_cmdtCode').send_keys(goodsNo) ## 상품명에 ISBN 입력
+driver.find_element_by_xpath('btn_search').click() ## [조회]버튼 클릭
+html = driver.page_source
+soup = BeautifulSoup(html, 'html.parser')
+notices = soup.select('#grd_saleStockInfo_cell_0_6 > nobr') ## 판매(영업점) 기록 파싱
+
+for n in notices:
+    print(n.text.strip())
+
+driver.quit() ##웹드라이버 종료

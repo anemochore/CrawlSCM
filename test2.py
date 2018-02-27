@@ -21,7 +21,7 @@ endDate = yesterDay ##Url에 검색 종료일을 '어제' 날짜로
 scmUrl = 'http://scm.yes24.com/AnalysisManagement/ListSaleAnalysisGoods/0?startDate=' + startDate + '&endDate=' + endDate + '&goodsNo='
 
 # 상품번호를 더하고 임의의 상품 페이지 접속 (터미널에 숫자가 뜨면 성공)
-goodsNo = "55864765" ##상품번호
+goodsNo = "31954455" ##상품번호
 driver.get(scmUrl + goodsNo)
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
@@ -40,3 +40,5 @@ for n in notices:
     print(n.text.strip())
 
 driver.quit() ##웹드라이버 종료
+
+##crawlscm@crawlscm.iam.gserviceaccount.com
