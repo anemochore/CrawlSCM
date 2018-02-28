@@ -1,25 +1,35 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from bs4 import BeautifulSoup
 import datetime
 
 options = webdriver.ChromeOptions()
-options.add_argument("user-data-dir=C:/Users/parkjisu/AppData/Local/Google/Chrome/User Data")  #크롬 기본 프로필을 불러옵니다. (쿠키와 아이디가 저장되어 있음)
-driver = webdriver.Chrome(executable_path="C:\py\chromedriver.exe", chrome_options=options)
+# options.add_argument("user-data-dir=C:/Users/parkjisu/AppData/Local/Google/Chrome/User Data")  #크롬 기본 프로필을 불러옵니다. (쿠키와 아이디가 저장되어 있음)
+driver = webdriver.Chrome(executable_path="./chromedriver.exe", chrome_options=options)
 driver.set_window_size(1024,768) ## 크롬 창을 작게 띄웁니다.
 driver.implicitly_wait(3) ## 컴이 후져도 3초 기다립니다.
 driver.get('https://scm.kyobobook.co.kr/scm/login.action')
-##driver.find_element_by_id('ipt_userId').send_keys('2208105665')
-##driver.find_element_by_id('ipt_password').send_keys('hanbit0319319!')
+driver.find_element_by_id('ipt_userId').send_keys('2208105665')
+driver.find_element_by_id('ipt_password').send_keys('hanbit0319319!')
 driver.find_element_by_xpath('//*[@id="btn_login"]').click() ## 로그인 버튼 클릭
 driver.implicitly_wait(3) ## 컴이 후져도 또한 10초 기다립니다.
 
-driver.get('https://scm.kyobobook.co.kr/scm/page.action?pageID=main')
-driver.implicitly_wait(5) ## 컴이 후져도 또한 10초 기다립니다.
-driver.find_element_by_class_name('w2selectbox_table_main').click() ## 드롭다운 폼
-driver.implicitly_wait(3) ## 컴이 후져도 또한 3초 기다립니다.
-driver.find_element_by_id('s_vndrList_itemTable_1"]').click() ## 2번째 사용자 계정 접속
+# driver.get('https://scm.kyobobook.co.kr/scm/page.action?pageID=main')
+
+WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "s_vndrList_label")))
+driver.execute_script("document.getElementById('s_vndrList_label').click();")
+
+WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "s_vndrList_itemTable")))
+driver.execute_script("document.getElementById('s_vndrList_itemTable_1').click();")
+
 driver.implicitly_wait(3) ## 컴이 후져도 그나마 3초 기다립니다.
+
 driver.get('https://scm.kyobobook.co.kr/scm/page.action?pageID=saleStockInfo') ## 판매조회 페이지로 이동
+
+#### 여기까지 성공
 
 now = datetime.datetime.now() - datetime.timedelta(days=1) ## 타임스탬프 사용
 yesterDay = now.strftime('%Y%m%d') ## 전일 기록을 가져오기 위해 '어제'날짜를 로드
