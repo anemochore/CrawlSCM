@@ -1,0 +1,33 @@
+import requests
+from lxml import etree
+
+base_url = 'http://www.yes24.com/24/category/bestsellerExcel?CategoryNumber=001001003&sumgb=07'
+year = '2018'
+month = '3'
+day = '6'
+max_page = 10    # 50페이지까지 제공하지만 보통 200위까지만 보니까.
+
+goods_no = []
+for i in range(1, max_page+1):
+    today_url = base_url + '&year='+year + '&month='+month + '&day='+day + '&PageNumber='+str(i)
+    req = requests.get(today_url)
+    html = req.text
+
+    # https://stackoverflow.com/questions/6325216/parse-html-table-to-python-list
+    table = etree.HTML(html).find("body/table")
+    rows = list(iter(table))[1:]    # 1행은 헤더이므로 무시
+    for row in rows:
+        values = [col.text for col in row]
+        goods_no.append(values[2])  # 상품번호만 리스트로 저장
+
+
+# 이건 시트에서 가져오게 바꾸시고...
+goods_to_find = ['55864765','57701496','57832756','58100107','58263685','58419359','58954013']
+
+ranks_to_find = [''] * len(goods_to_find)
+for i in range(len(goods_to_find)):
+    for j in range(len(goods_no)):
+        if goods_to_find[i] == goods_no[j]:
+            ranks_to_find[i] = j + 1    # 리스트 0번째면 1위이므로.
+
+print(ranks_to_find)
