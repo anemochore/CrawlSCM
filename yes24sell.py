@@ -60,6 +60,7 @@ for jisustack in Scmcrwal.yesnum:
     req = requests.get(jisugoodsurl)
     html = req.text
     soup = BeautifulSoup(html, 'html.parser')
+
     yesjisu = soup.findAll("span", {"class":"gd_sellNum"})
     for title in yesjisu:
         clean = title.text
@@ -67,6 +68,15 @@ for jisustack in Scmcrwal.yesnum:
     for jisu in cleanyesjisu:
         print(jisu)
         fjs.update_cell(i, 6, jisu)
+
+    yesrank = soup.findAll("a", {"onclick":"openUrl('/24/Category/Sum/001001003?SumGb=02','Pcode','003_009')"}) ## IT/모바일 분야 랭킹 null값 뱉음
+    for title2 in yesrank:
+        clean2 = title2.text
+        clean_yes_rank = re.findall('[0-9]+', clean2)
+    for rankIT in clean_yes_rank:
+        print(rankIT)
+        fjs.update_cell(i, 5, rankIT)
+
     i = i+1
 
 ##crawlscm@crawlscm.iam.gserviceaccount.com
